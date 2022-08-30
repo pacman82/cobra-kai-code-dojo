@@ -7,7 +7,7 @@ fn should_be_23_for_10() {
 }
 
 #[test]
-fn should_be_23_for_1000() {
+fn should_be_233168_for_1000() {
     let actual = multiples_of_5_and_3(1000);
     assert_eq!(233168, actual);
 }

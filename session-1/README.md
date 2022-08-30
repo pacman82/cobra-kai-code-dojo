@@ -67,3 +67,36 @@ pub fn multiples_of_5_and_3_slow_and_simple(n: u64) -> u64 {
     (1..n).filter(|i| i % 3 == 0 || i % 5 == 0).sum()
 }
 ```
+
+### Iterative development of the fast solution
+
+Now lets go for the fast solution. Using forumlas instead of loops:
+
+```rust
+pub fn multiples_of_5_and_3(n: u64) -> u64 {
+    (1..n).filter(|i| i % 3 == 0 || i % 5 == 0).sum()
+}
+```
+
+iteration
+
+```rust
+pub fn multiples_of_5_and_3(n: u64) -> u64 {
+    let multiples_3: u64 = (1..n).filter(|i| i % 3 == 0).sum();
+    let multiples_5: u64 = (1..n).filter(|i| i % 5 == 0).sum();
+    let multiples_15: u64 = (1..n).filter(|i| i % 15 == 0).sum();
+    multiples_3 + multiples_5 - multiples_15
+}
+```
+
+iteration
+
+```rust
+pub fn multiples_of_5_and_3(up_to: u64) -> u64 {
+    multiples_of(3, up_to) + multiples_of(5, up_to) - multiples_of(15, up_to)
+}
+
+fn multiples_of(of: u64, up_to: u64) -> u64 {
+    (1..up_to).filter(|i| i % of == 0).sum()
+}
+```
