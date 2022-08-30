@@ -45,3 +45,25 @@ fn should_be_23_for_1000() {
     assert_eq!(233168, actual);
 }
 ```
+
+### Property based testing
+
+Of course our implementation is currently brute force. Surly we can do better. However, often if we have an easy to understand solution it is a good idea to use it for property based testing, to verify the solution which might be more difficult to understand.
+
+Copy the simple brute force implementation to the testframework again, and use it to generate an expectation for the first `1000` values.
+
+```rust
+#[test]
+fn should_be_identical_to_slow_and_simple_solution() {
+    for n in 0..=1000 {
+        assert_eq!(
+            multiples_of_5_and_3_slow_and_simple(n),
+            multiples_of_5_and_3(n)
+        )
+    }
+}
+
+pub fn multiples_of_5_and_3_slow_and_simple(n: u64) -> u64 {
+    (1..n).filter(|i| i % 3 == 0 || i % 5 == 0).sum()
+}
+```
