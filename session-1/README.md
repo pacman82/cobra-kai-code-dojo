@@ -100,3 +100,68 @@ fn multiples_of(of: u64, up_to: u64) -> u64 {
     (1..up_to).filter(|i| i % of == 0).sum()
 }
 ```
+
+iteration (What step I would have missed the `if up_to == 0` without the tests!)
+
+```rust
+fn multiples_of(of: u64, up_to: u64) -> u64 {
+    if up_to == 0 {
+        0
+    } else {
+        of * (0..=(up_to - 1)/of).sum::<u64>()
+    }
+}
+```
+
+iteration
+
+```rust
+fn multiples_of(of: u64, up_to: u64) -> u64 {
+    if up_to == 0 {
+        0
+    } else {
+        of * sum((up_to - 1)/of)
+    }
+}
+
+fn sum(up_to: u64) -> u64 {
+    (0..=up_to).sum()
+}
+```
+
+iteration
+
+```rust
+fn sum(up_to: u64) -> u64 {
+    up_to * (up_to + 1) / 2
+}
+```
+
+Final solution
+
+```rust
+pub fn multiples_of_5_and_3(up_to: u64) -> u64 {
+    multiples_of(3, up_to) + multiples_of(5, up_to) - multiples_of(15, up_to)
+}
+
+fn multiples_of(of: u64, up_to: u64) -> u64 {
+    if up_to == 0 {
+        0
+    } else {
+        of * sum((up_to - 1)/of)
+    }
+}
+
+fn sum(up_to: u64) -> u64 {
+    up_to * (up_to + 1) / 2
+}
+```
+
+Please notice how we:
+
+* Could compile and test between each step
+* Did develop the solution top down (starting with a single test case)
+* Did develop a specific solution (10) and generalized it later to `n` once we had the first feedback loop.
+* The code did not necessarily get less readable.
+
+The more complicated the problem the **better** this approach will work. Frankly, it does not shine yet, because we have so little unknowns on the way yet.
