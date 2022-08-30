@@ -165,3 +165,35 @@ Please notice how we:
 * The code did not necessarily get less readable.
 
 The more complicated the problem the **better** this approach will work. Frankly, it does not shine yet, because we have so little unknowns on the way yet.
+
+## Benchmarking
+
+Use to add criterian bench mark suite to dev depnedencies:
+
+```shell
+cargo add --dev criterion
+```
+
+Create file `benches/bench.rs`.
+
+```rust
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use session_1::multiples_of_3_and_5;
+
+pub fn criterion_benchmark(c: &mut Criterion) {
+    c.bench_function("up_to 10", |b| b.iter(|| multiples_of_3_and_5(black_box(10))));
+}
+
+criterion_group!(benches, criterion_benchmark);
+criterion_main!(benches);
+```
+
+Add new benchmark suite to `Cargo.toml`
+
+```toml
+[[bench]]
+name = "bench"
+harness = false
+```
+
+Run with `cargo bench`. Find results in `target/criterion`.
