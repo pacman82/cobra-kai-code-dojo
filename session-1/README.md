@@ -1,6 +1,6 @@
 # Session 1 - Code Dojo
 
-## Problem
+## Kata / Problem
 
 ### Multiples of 3 and 5
 
@@ -23,3 +23,25 @@ fn should_be_23_for_10() {
 ```
 
 Now extract that function into the library.
+
+```rust
+pub fn multiples_of_5_and_3() -> u64 {
+    (1..10).filter(|i| i % 3 == 0 || i % 5 == 0).sum()
+}
+```
+
+Now you can use this to determine the result for `1000`, if interessted in solving the project euler problem. For this we must make the argument not hardcoded:
+
+```rust
+#[test]
+fn should_be_23_for_10() {
+    let actual = multiples_of_5_and_3(10);
+    assert_eq!(23, actual);
+}
+
+#[test]
+fn should_be_23_for_1000() {
+    let actual = multiples_of_5_and_3(1000);
+    assert_eq!(233168, actual);
+}
+```
