@@ -10,8 +10,14 @@ struct Fib {
     b: u64,
 }
 
+impl Fib {
+    pub fn new() -> Fib {
+        Fib { a: 1, b: 2 }
+    }
+}
+
 fn fib_it() -> impl Iterator<Item = u64> {
-    (0..).scan(Fib { a: 1, b: 2 }, |fib, _| {
+    (0..).scan(Fib::new(), |fib, _| {
         let new = fib.a + fib.b;
         fib.a = fib.b;
         fib.b = new;
