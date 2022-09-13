@@ -5,8 +5,13 @@ pub fn sum_even_fib(cutoff: u64) -> u64 {
         .sum()
 }
 
-fn fib_it() -> impl Iterator<Item=u64> {
-    (0..).scan((1,2), |(a,b), i| { Some(fib(i)) })
+fn fib_it() -> impl Iterator<Item = u64> {
+    (0..).scan((1, 2), |(a, b), i| {
+        let new = *a + *b;
+        *a = *b;
+        *b = new;
+        Some(new)
+    })
 }
 
 fn fib(n: u64) -> u64 {
