@@ -6,7 +6,7 @@ pub fn sum_even_fib(cutoff: u64) -> u64 {
 }
 
 fn fib_it() -> impl Iterator<Item=u64> {
-    (0..).map(fib)
+    (0..).scan((1,2), |(a,b), i| { Some(fib(i)) })
 }
 
 fn fib(n: u64) -> u64 {
