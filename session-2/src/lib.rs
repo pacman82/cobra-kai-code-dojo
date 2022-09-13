@@ -6,18 +6,10 @@ pub fn sum_even_fib(cutoff: u64) -> u64 {
 }
 
 fn fib_it() -> impl Iterator<Item = u64> {
-    (0..).scan((1, 2), |(a, b), i| {
+    (0..).scan((1, 2), |(a, b), _| {
         let new = *a + *b;
         *a = *b;
         *b = new;
         Some(new)
     })
-}
-
-fn fib(n: u64) -> u64 {
-    match n {
-        0 => 1,
-        1 => 2,
-        _ => fib(n - 1) + fib(n - 2),
-    }
 }
