@@ -1,6 +1,6 @@
 pub fn sum_even_fib(cutoff: u64) -> u64 {
-    (0..cutoff)
-        .map(fib)
+    let fib_it = (0..).map(fib);
+    fib_it
         .filter(|n| n % 2 == 0)
         .take_while(|&n| n <= cutoff)
         .sum()
