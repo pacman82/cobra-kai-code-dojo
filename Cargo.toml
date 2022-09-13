@@ -1,5 +1,5 @@
 [workspace]
-members=["session-1"]
+members=["session-1", "session-2"]
 
 [profile.release]
 # Panics should only be caused by logic errors and are considered bugs
