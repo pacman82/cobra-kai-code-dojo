@@ -14,7 +14,7 @@ Source: <https://projecteuler.net/problem=2>
 
 ### TDD workflow
 
-Start with the brute force implementation in a test, for a library. Hardcode the test to `10` and expect `23` as in the problem definition.
+Start with the brute force implementation in a test, for a library. Let's write this test based on the defitinion of the fibbonacci numbers, so we can trust the result.
 
 ```rust
 #[test]
@@ -100,8 +100,8 @@ Copy the simple brute force implementation to the testframework again, and use i
 fn should_be_identical_to_slow_and_simple_solution() {
     for n in 0..=1000 {
         assert_eq!(
-            multiples_of_5_and_3_slow_and_simple(n),
-            multiples_of_5_and_3(n)
+            sum_even_fib_slow_and_simple(n),
+            sum_even_fib(n)
         )
     }
 }
