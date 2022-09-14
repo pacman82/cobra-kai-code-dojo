@@ -135,7 +135,7 @@ pub fn sum_even_fib(cutoff: u64) -> u64 {
             _ => fib(n - 1) + fib(n - 2),
         }
     }
-    (0..cutoff)
+    (0..)
         .map(fib)
         .filter(|n| n % 2 == 0)
         .take_while(|&n| n <= cutoff)
