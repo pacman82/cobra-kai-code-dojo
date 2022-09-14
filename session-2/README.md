@@ -209,19 +209,12 @@ fn fib(n: u64) -> u64 {
 iterate (introduce state without using it yet)
 
 ```rust
-pub fn sum_even_fib(cutoff: u64) -> u64 {
-    fib_it()
-        .filter(|n| n % 2 == 0)
-        .take_while(|&n| n <= cutoff)
-        .sum()
-}
-
 fn fib_it() -> impl Iterator<Item=u64> {
     (0..).scan((1,2), |(a,b), i| { Some(fib(i)) })
 }
 ```
 
-iteration
+iteration (use new state)
 
 ```rust
 fn fib_it() -> impl Iterator<Item = u64> {
@@ -232,21 +225,15 @@ fn fib_it() -> impl Iterator<Item = u64> {
         Some(new)
     })
 }
-
-fn fib(n: u64) -> u64 {
-    match n {
-        0 => 1,
-        1 => 2,
-        _ => fib(n - 1) + fib(n - 2),
-    }
-}
 ```
+
+Oh no, tests error. We now miss the first two elements of the sequence. Let's start two elements earlier
 
 iteration
 
 ```rust
 fn fib_it() -> impl Iterator<Item = u64> {
-    (0..).scan((1, 2), |(a, b), _| {
+    (0..).scan((0, 1), |(a, b), _| {
         let new = *a + *b;
         *a = *b;
         *b = new;
@@ -255,6 +242,8 @@ fn fib_it() -> impl Iterator<Item = u64> {
 }
 ```
 
+iteration
+
 ```rust
 struct Fib {
     a: u64,
@@ -262,7 +251,7 @@ struct Fib {
 }
 
 fn fib_it() -> impl Iterator<Item = u64> {
-    (0..).scan(Fib { a: 1, b: 2 }, |fib, _| {
+    (0..).scan(Fib { a: 0, b: 1 }, |fib, _| {
         let new = fib.a + fib.b;
         fib.a = fib.b;
         fib.b = new;
@@ -271,10 +260,12 @@ fn fib_it() -> impl Iterator<Item = u64> {
 }
 ```
 
+iteration
+
 ```rust
 impl Fib {
     pub fn new() -> Fib {
-        Fib { a: 1, b: 2 }
+        Fib { a: 0, b: 1 }
     }
 }
 
@@ -288,12 +279,108 @@ fn fib_it() -> impl Iterator<Item = u64> {
 }
 ```
 
+iteration
+
+```rust
+impl Fib {
+    pub fn new() -> Fib {
+        Fib { a: 0, b: 1 }
+    }
+
+    pub fn next(&mut self) -> u64 {
+        let new = self.a + self.b;
+        self.a = self.b;
+        self.b = new;
+        new
+    }
+}
+
+fn fib_it() -> impl Iterator<Item = u64> {
+    (0..).scan(Fib::new(), |fib, _| Some(fib.next()))
+}
+```
+
+iteration
+
+```rust
+impl Fib {
+    pub fn new() -> Fib {
+        Fib { a: 0, b: 1 }
+    }
+
+    pub fn next(&mut self) -> u64 {
+        (self.a, self.b) = (self.b, self.a + self.b);
+        self.b
+    }
+}
+
+fn fib_it() -> impl Iterator<Item = u64> {
+    (0..).scan(Fib::new(), |fib, _| Some(fib.next()))
+}
+```
+
+iteration
+
+```rust
+struct Fib {
+    a: u64,
+    b: u64,
+}
+
+impl Fib {
+    pub fn new() -> Fib {
+        Fib { a: 0, b: 1 }
+    }
+}
+
+impl Iterator for Fib {
+    type Item = u64;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        (self.a, self.b) = (self.b, self.a + self.b);
+        Some(self.b)
+    }
+}
+
+fn fib_it() -> Fib {
+    Fib::new()
+}
+```
+
 Final solution
 
 ```rust
+pub fn sum_even_fib(cutoff: u64) -> u64 {
+    FibSeq::new()
+        .filter(|n| n % 2 == 0)
+        .take_while(|&n| n <= cutoff)
+        .sum()
+}
+
+struct FibSeq {
+    a: u64,
+    b: u64,
+}
+
+impl FibSeq {
+    pub fn new() -> FibSeq {
+        FibSeq { a: 0, b: 1 }
+    }
+}
+
+impl Iterator for FibSeq {
+    type Item = u64;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        (self.a, self.b) = (self.b, self.a + self.b);
+        Some(self.b)
+    }
+}
 ```
 
 Please notice how we:
 
 * Could compile and test between each step
 * Did develop the solution top down (starting with a single test case)
+* The test caught my off by two error
+* We introduced `Fib` as state only first; Made it hide his members second (SLA); Introduced trait impl Third.
