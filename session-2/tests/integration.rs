@@ -27,10 +27,7 @@ fn should_cutoff_for_4_000_000() {
 #[test]
 fn should_be_identical_to_slow_and_simple_solution() {
     for n in 0..=1000 {
-        assert_eq!(
-            sum_even_fib_slow_and_simple(n),
-            sum_even_fib(n)
-        )
+        assert_eq!(sum_even_fib_slow_and_simple(n), sum_even_fib(n))
     }
 }
 
